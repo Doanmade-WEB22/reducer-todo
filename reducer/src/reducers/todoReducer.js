@@ -1,32 +1,57 @@
-export const iniState = [
-  {
-    task: "Organize Garage",
-    id: 1528817077286,
-    completed: false
-  },
-  {
-    task: "Bake Cookies",
-    id: 1528817084358,
-    completed: false
-  }
-];
+export const initialState = {
+  todos: [
+    {
+      task: "Learn reducers!",
+      completed: false,
+      id: 1
+    },
+    {
+      task: "Learn Context API!",
+      completed: false,
+      id: 2
+    },
+    {
+      task: "Learn redux!",
+      completed: false,
+      id: 3
+    }
+  ]
+};
 
 export const todoReducer = (state, action) => {
   switch (action.type) {
+    case "ADD_TODO":
+      return {
+        ...state,
+        todos: [
+          ...state.todos,
+          {
+            task: action.payload,
+            id: Date.now(),
+            completed: false
+          }
+        ]
+      };
     case "TOGGLE_COMPLETED":
       return {
         ...state,
-        completed: !state.completed
+        todos: state.todos.map(todo =>
+          todo.id === action.id ? { ...todo, completed: !todo.completed } : todo
+        )
       };
-    case "UPDATE_TASK":
+    case "CLEAR_COMPLETED":
       return {
         ...state,
-        task: action.payload
+        todos: state.todos.filter(todo => !todo.completed)
       };
-    case "UPDATE_ID":
+    case "UPDATE_TODO":
       return {
         ...state,
-        id: state.id + 1
+        todos: state.todos.map(todo =>
+          todo.id === action.payload.id
+            ? { ...todo, task: action.payload.task }
+            : todo
+        )
       };
     default:
       return state;

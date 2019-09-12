@@ -1,82 +1,38 @@
-import React from "react";
+import React, { useReducer } from "react";
 import "./App.css";
 import TodoForm from "./components/TodoForm";
 import TodoList from "./components/TodoList";
+import { initialState, todoReducer } from "./reducers/todoReducer";
 
-// import { iniState, todoReducer } from './reducers/todoReducer';
+const App = () => {
+  const [state, dispatch] = useReducer(todoReducer, initialState);
 
-// const [state, dispatch] = useReducer(todoReducer, iniState);
-// console.log(state);
+  // This is adding a TODO to our state
+  const addTodo = item => dispatch({ type: "ADD_TODO", payload: item });
 
-const todoData = [
-  {
-    task: "Organize Garage",
-    id: 1528817077286,
-    completed: false
-  },
-  {
-    task: "Bake Cookies",
-    id: 1528817084358,
-    completed: false
-  }
-];
+  // This is toggling a TODO's complete
+  const toggleCompleted = id => dispatch({ type: "TOGGLE_COMPLETED", id: id });
 
-class App extends React.Component {
-  constructor() {
-    super();
+  // This is filtering out the completed TODOs
+  const clearCompleted = () => dispatch({ type: "CLEAR_COMPLETED" });
 
-    this.state = {
-      data: todoData
-    };
-  }
+  // This is updating a selected TODO
+  const updateTodo = (task, id) =>
+    dispatch({ type: "UPDATE_TODO", payload: { task, id } });
 
-  toggleTodo = id => {
-    this.setState({
-      data: this.state.data.map(todo => {
-        if (todo.id === id) {
-          return {
-            ...todo,
-            completed: !todo.completed
-          };
-        } else {
-          return todo;
-        }
-      })
-    });
-  };
-
-  addTodo = todoName => {
-    const newTodo = {
-      task: todoName,
-      id: Date.now(),
-      completed: false
-    };
-    this.setState({
-      data: [...this.state.data, newTodo]
-    });
-  };
-
-  clearCompleted = () => {
-    this.setState({
-      data: this.state.data.filter(todo => !todo.completed)
-    });
-  };
-
-  render() {
-    return (
-      <div className="App">
-        <div className="header">
-          <h1>Todos</h1>
-          <TodoForm addTodo={this.addTodo} />
-        </div>
+  return (
+    <div className="App">
+      <div className="header">
+        <h1>Todos</h1>
+        <TodoForm addTodo={addTodo} clearCompleted={clearCompleted} />
         <TodoList
-          data={this.state.data}
-          toggleTodo={this.toggleTodo}
-          clearCompleted={this.clearCompleted}
+          todos={state.todos}
+          toggleCompleted={toggleCompleted}
+          updateTodo={updateTodo}
         />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default App;

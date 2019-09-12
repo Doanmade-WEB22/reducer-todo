@@ -37,6 +37,7 @@ button {
   background-color: #d4d4d4;
   color: #000000;
   border-color: #575757;
+  margin-left: 5px;
 }
 
 input {
@@ -71,4 +72,12 @@ input {
   to {
     transform: rotate(360deg);
   }
+}
+
+.todos {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-left: 150px;
 }
